@@ -25,7 +25,7 @@ import {
   type ValidatedWeek,
   type NewEntities,
 } from '@/lib/csv-import'
-import { parsePDFs, type PdfDateOverride } from '@/lib/pdf-import'
+import type { PdfDateOverride } from '@/lib/pdf-import'
 
 type Stage = 'upload' | 'preview' | 'importing' | 'done'
 type DuplicateMode = 'overwrite' | 'skip'
@@ -149,6 +149,7 @@ export function CsvImportDialog({ open, onOpenChange, onComplete }: CsvImportDia
         const pdfFiles = Array.from(files)
         const dateOverride: PdfDateOverride | undefined =
           manualStart && manualEnd ? { week_start: manualStart, week_end: manualEnd } : undefined
+        const { parsePDFs } = await import('@/lib/pdf-import')
         const result = await parsePDFs(pdfFiles, pdfYear, (current, total) => {
           setProgress(`Parsing PDF ${current} of ${total}...`)
         }, dateOverride)
