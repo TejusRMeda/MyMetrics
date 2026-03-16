@@ -93,11 +93,11 @@ export default function WeeklyEntryForm({ editWeekId }: WeeklyEntryFormProps) {
       supabase.from('agents').select('id, name').eq('is_active', true).order('name'),
     ])
 
-    const trustsList = t.data || []
-    const issuesList = i.data || []
-    const productsList = p.data || []
-    const channelsList = ch.data || []
-    const agentsList = a.data || []
+    const trustsList: { id: number; name: string }[] = t.data ?? []
+    const issuesList: { id: number; name: string; parent_id: number | null }[] = i.data ?? []
+    const productsList: { id: number; name: string }[] = p.data ?? []
+    const channelsList: { id: number; name: string }[] = ch.data ?? []
+    const agentsList: { id: number; name: string }[] = a.data ?? []
 
     setTrusts(trustsList)
     setIssues(issuesList)

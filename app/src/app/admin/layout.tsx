@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
+import { useRouter } from 'next/navigation'
 import {
   Activity,
   ClipboardList,
@@ -16,7 +17,9 @@ import {
   BarChart3,
   Menu,
   X,
+  LogOut,
 } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
 
 const navItems = [
   { label: 'Weekly Entry', href: '/admin/weekly', icon: ClipboardList },
@@ -55,7 +58,14 @@ function NavLinks({ pathname, onNavigate }: { pathname: string; onNavigate?: () 
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
+  const router = useRouter()
   const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  async function handleSignOut() {
+    await supabase.auth.signOut()
+    router.push('/auth/login')
+    router.refresh()
+  }
 
   // Close sidebar on Escape key
   useEffect(() => {
@@ -115,6 +125,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <BarChart3 className="w-4 h-4" aria-hidden="true" />
             View Dashboard
           </Link>
+          <button
+            onClick={handleSignOut}
+            className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground w-full"
+          >
+            <LogOut className="w-4 h-4" aria-hidden="true" />
+            Sign Out
+          </button>
         </div>
       </aside>
 

@@ -2,9 +2,11 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Activity, BarChart3, TrendingUp, Building2, Package, AlertTriangle, MessageSquareText } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { Activity, BarChart3, TrendingUp, Building2, Package, AlertTriangle, MessageSquareText, LogOut } from 'lucide-react'
 import { DateRangeProvider } from '@/components/dashboard/date-range-context'
 import { DateRangeSelector } from '@/components/dashboard/date-range-selector'
+import { supabase } from '@/lib/supabase'
 
 const navItems = [
   { label: 'Overview', href: '/dashboard', icon: BarChart3 },
@@ -17,6 +19,13 @@ const navItems = [
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
+  const router = useRouter()
+
+  async function handleSignOut() {
+    await supabase.auth.signOut()
+    router.push('/auth/login')
+    router.refresh()
+  }
 
   return (
     <DateRangeProvider>
@@ -38,6 +47,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 >
                   Admin
                 </Link>
+                <button
+                  onClick={handleSignOut}
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  title="Sign out"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
               </div>
             </div>
             <nav aria-label="Dashboard navigation" className="flex gap-0.5 -mb-px overflow-x-auto scrollbar-none">
